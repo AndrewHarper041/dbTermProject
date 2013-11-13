@@ -2,16 +2,13 @@
 -- ### 1. Create the tables and insert necessary data
 
 drop table flight cascade constraints ;
-drop table administrator cascade constraints ;
-drop table product cascade constraints ;
-drop table bidlog cascade constraints ;
-drop table category cascade constraints ;
-drop table belongsto cascade constraints ;
+drop table plane cascade constraints ;
+drop table price cascade constraints ;
+drop table customer cascade constraints ;
+drop table reservation cascade constraints ;
+drop table reservation_detail cascade constraints ;
+drop table date cascade constraints ;
 
-drop table sys_time cascade constraints ;
-
-drop sequence seq1;
-drop sequence seq2;
 
 create table flight(
 flight_number varchar(3), 	
@@ -26,16 +23,16 @@ weekly_schedule varchar(7)
 create table plane(
 plane_type char(4),
 manufacture varchar(10),
-plane capacity int,
-last service date,
+plane_capacity int,
+last_service date,
 year int
 );
 
 create table price(
-departure city varchar(3),
-arrival city varchar(3),
-high price int,
-low price int
+departure_city varchar(3),
+arrival_city varchar(3),
+high_price int,
+low_price int
 );
 
 create table customer(
@@ -53,21 +50,21 @@ email varchar(30)
 );
 
 create table reservation(
-reservation_number varchar(5)
-cid varchar(9)
-cost int
-reservation_date date
+reservation_number varchar(5),
+cid varchar(9),
+cost int,
+reservation_date date,
 ticketed varchar(1)
 );
 
 create table reservation_detail(
-reservation_number varchar(5)
-fight_number varchar(3)
-fight_date date
+reservation_number varchar(5),
+flight_number varchar(3),
+flight_date date,
 leg int
 );
 
-create table Date(
+create table date(
 c_date date
 );
 
@@ -83,3 +80,19 @@ alter table flight add constraint fk_flight foreign key(plane_type) references p
 alter table reservation add constraint fk_reservation foreign key(cid) references customer(cid) ;
 alter table reservation add constraint fk_reservation_detail1 foreign key(reservation_number) references reservation(reservation_number) ;
 alter table reservation add constraint fk_reservation_detail2 foreign key(flight_number) references flight(flight_number) ;
+
+CREATE OR REPLACE TRIGGER adjustTicket
+
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER planeUpgrade
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER cancelReservation
+
+END;
+/
