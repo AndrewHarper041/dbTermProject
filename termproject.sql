@@ -40,8 +40,8 @@ cid varchar(9),
 salutation varchar(3),
 first_name varchar(30),
 last_name varchar(30),
-credit_card num varchar(16),
-credit_card expire date,
+credit_card_num varchar(16),
+credit_card_expire date,
 street varchar(30),
 city varchar(30),
 state varchar(2),
@@ -64,37 +64,59 @@ flight_date date,
 leg int
 );
 
-create table Date(
+create table "Date"(
 c_date date
 );
 
 
 alter table Flight add constraint pk_Flight primary key(Flight_number) ;
 alter table Plane add constraint pk_Plane primary key(Plane_type) ;
-alter table Price add constraint pk_Price primary key(departure city, arrival city) ;
+alter table Price add constraint pk_Price primary key(departure_city, arrival_city) ;
 alter table Customer add constraint pk_Customer primary key(cid) ;
 alter table Reservation add constraint pk_Reservation primary key(Reservation_number) ;
-alter table Date add constraint pk_date primary key(auction_id, category) ;
+alter table "Date" add constraint pk_date primary key(auction_id, category) ;
 
 alter table Flight add constraint fk_Flight foreign key(Plane_type) references Plane(Plane_type) ;
 alter table Reservation add constraint fk_Reservation foreign key(cid) references Customer(cid) ;
-alter table Reservation add constraint fk_Reservation_detail1 foreign key(Reservation_number) references Reservation(Reservation_number) ;
-alter table Reservation add constraint fk_Reservation_detail2 foreign key(Flight_number) references Flight(Flight_number) ;
+alter table Reservation add constraint fk_Reservation_detail1 foreign key(reservation_number) references Reservation(reservation_number) ;
+alter table Reservation add constraint fk_Reservation_detail2 foreign key(flight_number) references Flight(flight_number) ;
 
 CREATE OR REPLACE TRIGGER adjustTicket
 
 
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER PlaneUpgrade
 AFTER INSERT ON Reservation
 
 END;
-/
+
 
 CREATE OR REPLACE TRIGGER cancelReservation
 AFTER UPDATE ON Date
 
 END;
-/
+
+insert into Flight('153', 'A320', 'PIT', 'JFK', '1000', '1120', 'SMTWTFS');	
+insert into Flight('154', 'B737', 'JFK', 'DCA', '1230', '1320', 'S-TW-FS');	
+insert into Flight('552', 'E145', 'PIT', 'DCA', '1100', '1150', 'SM-WT-S');	
+
+insert into Plane('B737', 'Boeing', '125', '09/09/2009', '1996');
+insert into Plane('A320', 'Airbus', '155', '10/01/2011', '2001');
+insert into Plane('E145', 'Embraer', '50' '06/15/2010', '2008');
+
+insert into Price('PIT', 'JFK', '250', '120');
+insert into Price('JFK', 'PIT', '250', '120');
+insert into Price('JFK', 'DCA', '220', '100');
+insert into Price('DCA', 'JFK', '210', '90');
+insert into Price('PIT', 'DCA', '200', '150');
+insert into Price('DCA', 'PIT', '200', '150');
+
+
+
+
+
+
+
+
