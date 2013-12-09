@@ -16,7 +16,7 @@ public class team14 {
 
 	public static void main(String args[]) 
 	{
-		team01 doesNotMatterAtAll = new team14();
+		team14 doesNotMatterAtAll = new team14();
 	}
 	
 	public team14() 
@@ -73,7 +73,7 @@ public class team14 {
 				break;
 		}
 		
-		System.out.println("\n\n" + choices[choice - 1]);
+		System.out.println("\n\n" + choices.get(choice - 1));
 		
 		if(menu == 0) 
 		{
@@ -277,12 +277,12 @@ public class team14 {
 	}
 
 
-	public int getChoice(String title, String[] choices) 
+	public int getChoice(String title, ArrayList<String> choices) 
 	{
 		System.out.println("\n" + title + "\n" + lineBreak);
 		
-		for (int i = 1; i <= choices.length; i++) 
-			System.out.println("  " + i + ") " + choices[i - 1]);
+		for (int i = 1; i <= choices.size(); i++) 
+			System.out.println("  " + i + ") " + choices.get(i - 1));
 		
 		System.out.println(lineBreak);
 		
@@ -290,7 +290,7 @@ public class team14 {
 		do 
 		{
 			choice = getNumericInput("Choose an Item");
-		} while (choice <= 0 || choice > choices.length);
+		} while (choice <= 0 || choice > choices.size());
 		return choice;
 	}
 
