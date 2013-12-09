@@ -68,7 +68,25 @@ create table Current_d(
 c_date date
 );
 
+INSERT INTO Flight values('153', 'A320', 'PIT', 'JFK', '1000', '1120', 'SMTWTFS');
+INSERT INTO Flight values('154', 'B737', 'JFK', 'DCA', '1230', '1320', 'S-TW-FS');
+INSERT INTO Flight values('552', 'E145', 'PIT', 'DCA', '1100', '1150', 'SM-WT-S');
 
+INSERT INTO Plane values('B737', 'Boeing', '125', to_date('09/09/2009','mm/dd/yyyy'), '1996');
+INSERT INTO Plane values('A320', 'Airbus', '155', to_date('10/01/2011','mm/dd/yyyy'), '2001');
+INSERT INTO Plane values('E145', 'Embraer', '50', to_date('06/15/2010','mm/dd/yyyy'), '2008');
+
+INSERT INTO PRICE values('PIT', 'JFK', '250', '120');
+INSERT INTO PRICE values('JFK', 'PIT', '250', '120');
+INSERT INTO PRICE values('JFK', 'DCA', '220', '100');
+INSERT INTO PRICE values('DCA', 'JFK', '210', '90');
+INSERT INTO PRICE values('PIT', 'DCA', '200', '150');
+INSERT INTO PRICE values('DCA', 'PIT', '200', '150');
+
+insert into customer values('123456789', 'MR', 'Josh', 'Frey', '4444444444444444', to_date('08/31/1991','mm/dd/yyyy'), 'ward', 'pittsburgh', 'PA', '7174494601', 'jtf15@pitt.edu');
+
+
+insert into reservation_detail values('12345', '153', to_date('09/09/2009','mm/dd/yyyy'), 1);
 
 
 
@@ -113,48 +131,6 @@ new_cid := max_cid + 1;
 insert into Customer 
 values(new_cid, csalutation, cfirst_name, clast_name,ccredit_card_num, ccredit_card_expire,
 	   cstreet, ccity, cstate, cphone, cemail);
-
-
-END;
-/
-
-CREATE OR REPLACE TRIGGER PlaneUpgrade
-AFTER INSERT ON Reservation
-FOR EACH ROW
-DECLARE
-cflight_number varchar2(3);
-cplane_type char(4);
-cplane_capacity  int;
-new_ptype  char;
-max_capacity int ;
-BEGIN
---Get the flight number of what the new reservation is
-SELECT flight_number into cflight_number
-FROM reservation_detail r_d
-WHERE :new.reservation_number = r_d.reservation_number;
---Get the plane type of the flight
-SELECT plane_type into cplane_type
-FROM   Flight
-WHERE flight_number = cflight_number;
---Find out it's current capacity
-SELECT plane_capacity into cplane_capacity 
-FROM Plane
-WHERE plane_type = cplane_type ;
---Get the max capacity of any plane
-SELECT Max(plane_capacity) into max_capacity
-FROM Plane;
---Get the next biggest  size plane
-SELECT plane_type into cplane_type
-FROM (SELECT plane_type, MIN(Plane_capacity) 
-	  FROM Plane
-	  WHERE plane_capacity > cplane_capacity and  max_capacity != cplane_capacity);
---if the capacity of the passengers exceeds that of the current plane, upgrade to next biggest.
-if(count_passengers(cflight_number) > cplane_capacity) then
-UPDATE Flight 
-SET plane_type = new_ptype 
-WHERE flight_number = cflight_number;
-end if;
-
 
 
 END;
@@ -236,7 +212,101 @@ END;
 
 
 
+CREATE OR REPLACE TRIGGER PlaneUpgrade
+AFTER INSERT ON Reservation
+FOR EACH ROW
+DECLARE
+cflight_number varchar2(3);
+cplane_type char(4);
+rowNumb int;
+cplane_capacity  int;
+new_ptype  char(4);
+max_capacity int ;
+BEGIN
+--Get the flight number of what the new reservation is
+SELECT flight_number into cflight_number
+FROM reservation_detail r_d
+WHERE :new.reservation_number = r_d.reservation_number;
+--Get the plane type of the flight
+SELECT plane_type into cplane_type
+FROM   Flight
+WHERE flight_number = cflight_number;
+--Find out it's current capacity
+SELECT plane_capacity into cplane_capacity 
+FROM Plane
+WHERE plane_type = cplane_type ;
+--Get the max capacity of any plane
+--SELECT Max(plane_capacity) into max_capacity
+--FROM Plane;
+--Get the next biggest  size plane
+--SELECT plane_type into cplane_type
+--FROM (SELECT plane_type, MIN(Plane_capacity) 
+--	  FROM Plane
+--	  WHERE plane_capacity > cplane_capacity and  max_capacity != cplane_capacity);
 
+--Get the row number of the current plane type
+Select nrow into rowNumb
+FROM 
+(SELECT Row_Number() OVER(ORDER BY plane_capacity) AS nrow, plane_type
+FROM Plane)
+WHERE plane_type = cplane_type ;
+--Update the new plane type to the row above the current one
+SELECT plane_type into new_ptype
+FROM (SELECT Row_Number() OVER(ORDER BY plane_capacity) AS nrow, plane_type
+FROM Plane)
+Where nrow= rowNumb-1;
+
+--if the capacity of the passengers exceeds that of the current plane, upgrade to next biggest.
+if(count_passengers(cflight_number) > cplane_capacity) then
+UPDATE Flight 
+SET plane_type = new_ptype 
+WHERE flight_number = cflight_number;
+end if;
+
+
+
+END;
+/
+
+--##ADMINISTRATOR TASKS##--
+
+
+
+
+--##Task 1##--
+-- Procedure to delete the database --
+-- HANDLED IN SQL/PL --
+--##Task 2##--
+--Load a schedule
+--Use procedure to refrain from having to do multiple inserts in SQL/PL
+CREATE OR REPLACE PROCEDURE insertSchedule(
+nflight_number in varchar2, 	
+nplane_type  in char,
+ndeparture_city in varchar2,
+narrival_city in varchar2,
+ndeparture_time in varchar2,
+narrival_time in varchar2,
+nweekly_schedule in varchar2)
+is
+BEGIN
+INSERT INTO Flight values(nflight_number, nplane_type, ndeparture_city, narrival_city,
+ndeparture_time, narrival_time, nweekly_schedule);
+END;
+/
+
+--##TASK 3##-
+--Similarly to task 2 used to reduce clutter in SQL/PL--
+
+CREATE OR REPLACE PROCEDURE insertPricing(
+ndeparture_city in varchar2,
+narrival_city in varchar2,
+nhigh_Price in int,
+nlow_Price in int)
+is
+BEGIN
+INSERT INTO Price values(ndeparture_city, narrival_city, nhigh_price, nlow_price);
+END;
+/
 
 
 
