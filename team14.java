@@ -169,6 +169,22 @@ public class team01 {
 	
 	public void addCustomer()
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("call add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+				
+				for(int i = 0; i < 10; i++)
+					cs.setString(i+1, split[i]);
+	
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
 	
 	}
 		
@@ -222,7 +238,7 @@ public class team01 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin put_product(?, ?, ?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertSchedule(?, ?, ?, ?, ?, ?, ?);");
 				
 				for(int i = 0; i < 7; i++)
 					cs.setString(i+1, split[i]);
@@ -234,12 +250,42 @@ public class team01 {
 		
 	public void loadPriceInfo()
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("call insertPricing(?, ?, ?, ?);");
+				
+				for(int i = 0; i < 4; i++)
+					cs.setString(i+1, split[i]);
 	
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
 	}
 		
 	public void loadPlaneInfo()
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("call loadPlane(?, ?, ?, ?, ?);");
+				
+				for(int i = 0; i < 5; i++)
+					cs.setString(i+1, split[i]);
 	
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
 	}
 		
 	public void generateManifest()
