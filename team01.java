@@ -40,26 +40,26 @@ public class team01 {
 
 	public void promptMenu(int menu) 
 	{
-		String[] choices = new String[10];
+		ArrayList<String> choices = new ArrayList<String>();
 		int choice = 0;
 		switch(menu) 
 		{
 			default:
-				choices[0] = "Administrator";
-				choices[1] = "User";
-				choices[2] = "Exit";
+				choices.add("Administrator");
+				choices.add("User");
+				choices.add("Exit");
 				choice = getChoice("Main menu", choices);
 				break;
 				
 			case 1:
-				choices[0] = "Add customer";
-				choices[1] = "Show customer info, given customer name";
-				choices[2] = "Find price for flights between two cities";
-				choices[3] = "Find all routes between two cities";
-				choices[4] = "Find all routes with available seats between two cities on given day";
-				choices[5] = "Add reservation";
-				choices[6] = "Show reservation info, given reservation number";
-				choices[7] = "Buy ticket from existing reservation";
+				choices.add("Add customer");
+				choices.add("Show customer info, given customer name");
+				choices.add("Find price for flights between two cities");
+				choices.add("Find all routes between two cities");
+				choices.add("Find all routes with available seats between two cities on given day");
+				choices.add("Add reservation");
+				choices.add("Show reservation info, given reservation number");
+				choices.add("Buy ticket from existing reservation");
 				choice = getChoice("User menu", choices);
 				break;
 				
