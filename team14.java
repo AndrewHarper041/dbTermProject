@@ -95,8 +95,8 @@ public class team14 {
 			switch(choice) 
 			{
 				case 1:
-				addCustomer();
-				promptMenu(1);
+					addCustomer();
+					promptMenu(1);
 					break;
 				case 2:
 					showCustomer();
@@ -148,11 +148,11 @@ public class team14 {
 					promptMenu(2);
 					break;
 				case 3:
-					loadPriceInfo();
+					loadPriceInfo(getInput("What is the file name"));
 					promptMenu(2);
 					break;
 				case 4:
-					loadPlaneInfo();
+					loadPlaneInfo(getInput("What is the file name"));
 					promptMenu(2);
 					break;				
 				case 5:
@@ -222,7 +222,7 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin put_product(?, ?, ?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("begin insertSchedule(?, ?, ?, ?, ?, ?, ?); end;");
 				
 				for(int i = 0; i < 7; i++)
 					cs.setString(i+1, split[i]);
@@ -232,14 +232,50 @@ public class team14 {
 		}catch(Exception e) {System.out.println(e);}
 	}
 		
-	public void loadPriceInfo()
+	public void loadPriceInfo(String fn)
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("begin insertPricings(?, ?, ?, ?); end;");
+				
+				
+				cs.setString(1, split[0]);
+				cs.setString(2, split[1]);
+				cs.setInt(3, split[2]);
+				cs.setInt(4, split[3]);
 	
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
 	}
 		
-	public void loadPlaneInfo()
+	public void loadPlaneInfo(String fn)
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("begin put_product(?, ?, ?, ?); end;");
+				
+				
+				cs.setString(1, split[0]);
+				cs.setString(2, split[1]);
+				cs.setInt(3, split[2]);
+				cs.setInt(4, split[3]);
 	
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
 	}
 		
 	public void generateManifest()
