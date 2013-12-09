@@ -7,7 +7,7 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
-public class team01 {
+public class team14 {
 	private Connection connection;
 	private String username, password;
 	private Scanner input;
@@ -16,7 +16,7 @@ public class team01 {
 
 	public static void main(String args[]) 
 	{
-		team01 doesNotMatterAtAll = new team14();
+		team14 doesNotMatterAtAll = new team14();
 	}
 	
 	public team14() 
@@ -39,40 +39,41 @@ public class team01 {
 
 	public void promptMenu(int menu) 
 	{
-		String[] choices = new String[10];
+		ArrayList<String> choices = new ArrayList<String>();
 		int choice = 0;
 		switch(menu) 
 		{
 			default:
-				choices[0] = "Administrator";
-				choices[1] = "User";
-				choices[2] = "Exit";
+				choices.add("Administrator");
+				choices.add("User");
+				choices.add("Exit");
 				choice = getChoice("Main menu", choices);
 				break;
 				
 			case 1:
-				choices[0] = "Add customer";
-				choices[1] = "Show customer info, given customer name";
-				choices[2] = "Find price for flights between two cities";
-				choices[3] = "Find all routes between two cities";
-				choices[4] = "Find all routes with available seats between two cities on given day";
-				choices[5] = "Add reservation";
-				choices[6] = "Show reservation info, given reservation number";
-				choices[7] = "Buy ticket from existing reservation";
+				choices.add("Add customer");
+				choices.add("Show customer info, given customer name");
+				choices.add("Find price for flights between two cities");
+				choices.add("Find all routes between two cities");
+				choices.add("Find all routes with available seats between two cities on given day");
+				choices.add("Add reservation");
+				choices.add("Show reservation info, given reservation number");
+				choices.add("Buy ticket from existing reservation");
 				choice = getChoice("User menu", choices);
 				break;
 				
 			case 2:
-				choices[0] = "Erase the database";
-				choices[1] = "Load schedule information";
-				choices[2] = "Load pricing information";
-				choices[3] = "Load plane information";
-				choices[4] = "Generate passenger manifest for specific fight on given day";
+				choices.add("Erase the database");
+				choices.add("Load schedule information");
+				choices.add("Load pricing information");
+				choices.add("Load plane information");
+				choices.add("Generate passenger manifest for specific fight on given day");
+				choices.add("Generate passenger manifest for specific fight on given day");
 				choice = getChoice("Administrator menu", choices);
 				break;
 		}
 		
-		System.out.println("\n\n" + choices[choice - 1]);
+		System.out.println("\n\n" + choices.get(choice - 1));
 		
 		if(menu == 0) 
 		{
@@ -164,7 +165,6 @@ public class team01 {
 					break;
 			}
 		} 
-
 	}
 	
 	public void addCustomer()
@@ -323,12 +323,12 @@ public class team01 {
 	}
 
 
-	public int getChoice(String title, String[] choices) 
+	public int getChoice(String title, ArrayList<String> choices) 
 	{
 		System.out.println("\n" + title + "\n" + lineBreak);
 		
-		for (int i = 1; i <= choices.length; i++) 
-			System.out.println("  " + i + ") " + choices[i - 1]);
+		for (int i = 1; i <= choices.size(); i++) 
+			System.out.println("  " + i + ") " + choices.get(i - 1));
 		
 		System.out.println(lineBreak);
 		
@@ -336,7 +336,7 @@ public class team01 {
 		do 
 		{
 			choice = getNumericInput("Choose an Item");
-		} while (choice <= 0 || choice > choices.length);
+		} while (choice <= 0 || choice > choices.size());
 		return choice;
 	}
 
