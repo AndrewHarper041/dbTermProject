@@ -1,6 +1,5 @@
 //CS1555 Term Project
-//Nicholas Amoscato -- naa46@pitt.edu
-//Ryan Sandhaus -- rjs90@pitt.edu
+
 
 import java.io.*;
 import oracle.sql.*;
@@ -17,10 +16,10 @@ public class team01 {
 
 	public static void main(String args[]) 
 	{
-		team01 doesNotMatterAtAll = new team01();
+		team01 doesNotMatterAtAll = new team14();
 	}
 	
-	public team01() 
+	public team14() 
 	{
 		//Ill fix it later Zain
 		String username = "adh41";
