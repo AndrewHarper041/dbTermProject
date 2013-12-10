@@ -305,7 +305,6 @@ public class team14 {
 				split = line.split("\\s+");
 				CallableStatement cs = connection.prepareCall("begin insertPlane(?, ?, ?, ?, ?); end;");
 				
-				
 				cs.setString(1, split[0]);
 				cs.setString(2, split[1]);
 				cs.setInt(3, Integer.parseInt(split[2]));
