@@ -319,6 +319,21 @@ public class team14 {
 	public void generateManifest()
 	{
 		
+		/*
+			The Query:
+			
+			SELECT Salutation, first_name, last_name
+				  FROM Customer c JOIN (SELECT cid
+										FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number
+										WHERE rd.flight_date =ndate and rd.flight_number = nflight_number) t ON c.cid = t.cid;
+			
+				 
+								     
+						 
+		
+		*/
+		
+		
 	}	
 	
 	public int getNumericInput(String prompt) 
