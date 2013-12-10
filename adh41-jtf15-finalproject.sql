@@ -78,7 +78,7 @@ INSERT INTO Plane values('E145', 'Embraer', '50', to_date('06/15/2010','mm/dd/yy
 
 INSERT INTO PRICE values('PIT', 'JFK', '250', '120');
 INSERT INTO PRICE values('JFK', 'PIT', '250', '120');
-INSERT INTO PRICE values('JFK', 'DCA', '220', '100');
+INSERT INTO PRICE values('JFK', 'DCA', '220', '100');	
 INSERT INTO PRICE values('DCA', 'JFK', '210', '90');
 INSERT INTO PRICE values('PIT', 'DCA', '200', '150');
 INSERT INTO PRICE values('DCA', 'PIT', '200', '150');

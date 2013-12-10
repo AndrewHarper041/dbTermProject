@@ -196,6 +196,8 @@ public class team14 {
 			String last = getInput("Last Name?");
 			
 			//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
+			insert into customer values('123456789', 'MR', 'Josh', 'Frey', '4444444444444444', to_date('08/31/1991','mm/dd/yyyy'), 'ward', 'pittsburgh', 'PA', '7174494601', 'jtf15@pitt.edu');
+
 			
 			String street = getInput("Street Name?");
 			String city = getInput("City Name?");
@@ -213,7 +215,7 @@ public class team14 {
 				cs.setString(3, last);
 				cs.setString(4, cardNum);
 				
-				cs.setDate(5, java.sql.Date.valueOf(cardExp));
+				cs.setDate(5, date);
 				cs.setString(6, street);
 				cs.setString(7, city);
 				cs.setString(8, state);
@@ -328,7 +330,7 @@ public class team14 {
 			{
 				split = line.split("\\s+");
 				
-				CallableStatement cs = connection.prepareCall("begin insertSchedule(?, ?, ?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertSchedule(?, ?, ?, ?, ?, ?, ?); end;");
 				
 				for(int i = 0; i < 7; i++)
 					cs.setString(i+1, split[i]);
@@ -349,7 +351,7 @@ public class team14 {
 			{
 				split = line.split("\\s+");
 				
-				CallableStatement cs = connection.prepareCall("begin insertPricing(?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertPricing(?, ?, ?, ?); end;");
 				
 				
 				cs.setString(1, split[0]);
@@ -375,7 +377,7 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin insertPlane(?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertPlane(?, ?, ?, ?, ?); end;");
 
 				d = strToDate(split[3]);
 				
@@ -508,6 +510,7 @@ public class team14 {
 				
 				return new java.sql.Date(parsed.getTime());
 			}
+			
 			else
 			{
 				System.out.println("Invalid date, format must be MM/dd/yyyy.");
