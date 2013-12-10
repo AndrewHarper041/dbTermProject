@@ -104,7 +104,7 @@ public class team14 {
 					promptMenu(1);
 					break;
 			}
-		}
+		}	
 		
 		//USER SWITCH
 		else if (menu == 1) 
@@ -196,8 +196,6 @@ public class team14 {
 			String last = getInput("Last Name?");
 			
 			//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
-			insert into customer values('123456789', 'MR', 'Josh', 'Frey', '4444444444444444', to_date('08/31/1991','mm/dd/yyyy'), 'ward', 'pittsburgh', 'PA', '7174494601', 'jtf15@pitt.edu');
-
 			
 			String street = getInput("Street Name?");
 			String city = getInput("City Name?");
@@ -296,13 +294,7 @@ public class team14 {
 			String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
 			String db = connection.getMetaData().getURL();
 			if(ans.equals("Yes"))
-				query("DELETE * FROM Flight; " + 
-						"DELETE * FROM Plane; "+
-						"DELETE * FROM Price; "+
-						"DELETE * FROM Customer; "+
-						"DELETE * FROM Resrvation; "+
-						"DELETE * FROM Reservation_Detail; " +
-						"DELETE * FROM c_date ; ");
+				query("DROP DATABASE " + db + ";");
 
 		//String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
 		//if(confirmation == 'Y'){
