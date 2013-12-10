@@ -211,12 +211,23 @@ public class team14 {
 		
 	public void showCustomer()
 	{
+		/* Query
 		
+		SELECT * FROM Customer WHERE nfirst_name = first_name and nlast_name = last_name
+		
+		*/ 
 	}
 		
 	public void findPrice()
 	{
+		/* Query
 		
+			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
+			
+			SELECT high_price, low_price FROM PRICE WHERE narrival_city = departure_city and ndeparture_city = arrival_city
+		
+			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
+		*/
 	}
 		
 	public void findRoutes()
@@ -236,7 +247,12 @@ public class team14 {
 		
 	public void showReservation()
 	{
-		
+		/*
+			SELECT *
+			FROM Flight f JOIN (SELECT Flight_number 
+								FROM   Reservation_detail 
+								WHERE nreservation_number = reservation_number) t ON f.Flight_number = t.Flight_number ;
+		*/
 	}
 		
 	public void buyTicket()
@@ -246,6 +262,22 @@ public class team14 {
 		
 	public void eraseDatabase()
 	{
+		String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
+		if(confirmation == 'Y'){
+			/*Queries
+			DELETE * FROM Flight;
+			DELETE * FROM Plane;
+			DELETE * FROM Price;
+			DELETE * FROM Customer;
+			DELETE * FROM Resrvation;
+			DELETE * FROM Reservation_Detail;
+			DELETE * FROM c_date ;
+			
+			
+			
+			*/
+		
+		}
 		
 	}
 		
