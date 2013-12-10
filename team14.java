@@ -7,6 +7,24 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 
+/*TODO:
+Admin:
+1. SQL java.sql.SQLSyntaxErrorException: ORA-00933: SQL command not properly ended, confimation works
+2.Works but does insert double
+3.Works but does insert double
+4.Works but does insert double
+5.Illegal relational operator.
+Customer:
+1.Missing in or out parameters on SQL
+2.Missing expression
+3.
+4.
+5.
+6.
+7.
+8.
+*/
+
 public class team14 {
 	private Connection connection;
 	private String username, password;
@@ -67,7 +85,6 @@ public class team14 {
 				choices.add("Load schedule information");
 				choices.add("Load pricing information");
 				choices.add("Load plane information");
-				choices.add("Generate passenger manifest for specific fight on given day");
 				choices.add("Generate passenger manifest for specific fight on given day");
 				choice = getChoice("Administrator menu", choices);
 				break;
@@ -185,12 +202,11 @@ public class team14 {
 			String state = getInput("State Name?");
 			String email = getInput("Email Address?");
 			String cardNum = getInput("Credit Card Number?");
-			String cardExp = getInput("Credit Card Expiration Date (yyyy-MM-dd)?");
+			String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
 			
-			if(!isDateValid(cardExp))
-				System.out.println("Card exp date is invalid format. Needs to be yyyy-MM-dd. Add Aborted");
+			java.sql.Date date = strToDate("cardExp");
 			
-			else
+			if(date != null);
 			{
 				cs.setString(1, sal);
 				cs.setString(2, first);
@@ -225,6 +241,10 @@ public class team14 {
 	{
 		String a = getInput("From city?");
 		String b = getInput("To city?");
+		
+		ResultSet rs1 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
+		ResultSet rs2 = query("SELECT high_price, low_price FROM PRICE WHERE " + b + " = departure_city and " + a + " = arrival_city");
+		//ResultSet rs3 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
 		/* Query
 		
 			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
@@ -239,13 +259,15 @@ public class team14 {
 	{
 		String a = getInput("From city?");
 		String b = getInput("To city?");
+		
 	}
 		
 	public void findAvailableRoutes()
 	{
 		String a = getInput("From city?");
 		String b = getInput("To city?");
-		String b = getInput("On what data (yyyy-mm-dd)?");
+		String c = getInput("On what data (yyyy-mm-dd)?");
+		
 	}
 		
 	public void addReservation()
@@ -255,12 +277,9 @@ public class team14 {
 		
 	public void showReservation()
 	{
-		/*
-			SELECT *
-			FROM Flight f JOIN (SELECT Flight_number 
-								FROM   Reservation_detail 
-								WHERE nreservation_number = reservation_number) t ON f.Flight_number = t.Flight_number ;
-		*/
+		String reserveNum = getInput("Which reservation?");
+		query("SELECT * FROM Flight f JOIN (SELECT Flight_number FROM   Reservation_detail WHERE " + reserveNum + " = reservation_number) t ON f.Flight_number = t.Flight_number");
+
 	}
 		
 	public void buyTicket()
@@ -270,10 +289,12 @@ public class team14 {
 		
 	public void eraseDatabase()
 	{
-		String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
-		String db = connection.getMetaData().getURL();
-		if(ans.equals("Yes"))
-			query("DROP DATABASE " + db);
+		try
+		{
+			String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
+			String db = connection.getMetaData().getURL();
+			if(ans.equals("Yes"))
+				query("DROP DATABASE " + db + ";");
 
 		//String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
 		//if(confirmation == 'Y'){
@@ -290,7 +311,9 @@ public class team14 {
 			
 			*/
 		
-		}
+		//}
+		
+		} catch (SQLException e) {handleSQLException(e);}
 		
 	}	
 		
@@ -325,7 +348,8 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin insertPricings(?, ?, ?, ?); end;");
+				
+				CallableStatement cs = connection.prepareCall("begin insertPricing(?, ?, ?, ?); end;");
 				
 				
 				cs.setString(1, split[0]);
@@ -345,16 +369,21 @@ public class team14 {
 			BufferedReader br = new BufferedReader(new FileReader(fn));
 			String line;
 			String[] split;
+			
+			java.sql.Date d;
+			
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
 				CallableStatement cs = connection.prepareCall("begin insertPlane(?, ?, ?, ?, ?); end;");
+
+				d = strToDate(split[3]);
 				
 				cs.setString(1, split[0]);
 				cs.setString(2, split[1]);
 				cs.setInt(3, Integer.parseInt(split[2]));
-				cs.setDate(4, java.sql.Date.valueOf(split[3]));
-				cs.setInt(4, Integer.parseInt(split[3]));
+				cs.setDate(4, d);
+				cs.setInt(5, Integer.parseInt(split[4]));
 	
 				cs.execute();
 			}
@@ -364,8 +393,12 @@ public class team14 {
 	public void generateManifest()
 	{
 		String flightNum = getInput("What flight number?");
-		String flightNum = getInput("What date?");
+		String flightDate = getInput("What date?");
 		//Join with customer on cid and print where date and fn match
+		
+		//THROWS ERROR java.sql.SQLSyntaxErrorException invalid relation operator
+		System.out.println("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd." + flightDate + " = ndate and rd." + flightNum + " = nflight_number) t ON c.cid = t.cid;");
+		query("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd." + flightDate + " = ndate and rd." + flightNum + " = nflight_number) t ON c.cid = t.cid;");
 		
 		/*
 			The Query:
@@ -374,11 +407,6 @@ public class team14 {
 				  FROM Customer c JOIN (SELECT cid
 										FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number
 										WHERE rd.flight_date =ndate and rd.flight_number = nflight_number) t ON c.cid = t.cid;
-			
-				 
-								     
-						 
-		
 		*/
 		
 		
@@ -452,6 +480,42 @@ public class team14 {
 		} catch (SQLException e) {handleSQLException(e);return null;}
 	}
 	
+	public boolean hasValue(String val, String field, String table)
+	{
+		try
+		{
+			ResultSet rs = query("SELECT COUNT(*) FROM " + table + " WHERE " + field + " = " + val);
+			rs.next();
+			if(rs.getInt(1) > 0)
+				return true;
+			else
+				return false;
+		} catch (SQLException e) {handleSQLException(e);}
+		return false;
+	}
+	
+	public java.sql.Date strToDate(String date)
+	{
+		try
+		{
+		
+			if(isDateValid(date, "MM/dd/yyyy"))
+			{
+				SimpleDateFormat format;
+				java.util.Date parsed;	
+				format = new SimpleDateFormat("MM/dd/yyyy");
+				parsed = format.parse(date);
+				
+				return new java.sql.Date(parsed.getTime());
+			}
+			else
+			{
+				System.out.println("Invalid date, format must be MM/dd/yyyy.");
+				return null;
+			}
+		}catch(ParseException e){System.out.println(e); return null;}
+				
+	}
 
 	private static boolean isDateValid(String date, String format) 
 	{
