@@ -211,22 +211,28 @@ public class team14 {
 		
 	public void showCustomer()
 	{
-		
+		String fn = getInput("First Name?");
+		String ln = getInput("Last Name?");
+		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = \'" + ln + "';");
 	}
 		
 	public void findPrice()
 	{
-		
+		String a = getInput("From city?");
+		String b = getInput("To city?");
 	}
 		
 	public void findRoutes()
 	{
-		
+		String a = getInput("From city?");
+		String b = getInput("To city?");
 	}
 		
 	public void findAvailableRoutes()
 	{
-		
+		String a = getInput("From city?");
+		String b = getInput("To city?");
+		String b = getInput("On what data (yyyy-mm-dd)?");
 	}
 		
 	public void addReservation()
@@ -246,8 +252,12 @@ public class team14 {
 		
 	public void eraseDatabase()
 	{
+		String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
+		String db = connection.getMetaData().getURL();
+		if(ans.equals("Yes"))
+			query("DROP DATABASE " + db);
 		
-	}
+	}	
 		
 	public void loadScheduleInfo(String fn)
 	{
@@ -318,8 +328,12 @@ public class team14 {
 		
 	public void generateManifest()
 	{
+		String flightNum = getInput("What flight number?");
+		String flightNum = getInput("What date?");
+		//Join with customer on cid and print where date and fn match
 		
 	}	
+	
 	
 	public int getNumericInput(String prompt) 
 	{
@@ -388,55 +402,6 @@ public class team14 {
 		} catch (SQLException e) {handleSQLException(e);return null;}
 	}
 	
-	public PreparedStatement getPreparedQuery(String query) 
-	{
-		try 
-		{
-			return connection.prepareStatement(query);
-		} catch (SQLException e) {handleSQLException(e);return null;}
-	}
-
-	public ResultSet query(PreparedStatement ps, List<String> parameters) 
-	{
-		try 
-		{
-			for (int i = 1; i <= parameters.size(); i++) 
-				ps.setString(i, parameters.get(i - 1));
-				
-			ResultSet result = ps.executeQuery();
-			
-			if (result.isBeforeFirst()) 
-				return result;
-			else 
-				return null;
-		} catch (SQLException e) {handleSQLException(e);return null;}
-	}
-	
-
-	public ResultSet query(PreparedStatement ps, String str) 
-	{
-		return query(ps, Arrays.asList(str));
-	}
-	
-
-	public int queryUpdate(PreparedStatement ps, List<String> parameters) 
-	{
-		try 
-		{
-			for (int i = 1; i <= parameters.size(); i++) 
-				ps.setString(i, parameters.get(i - 1));
-				
-			return ps.executeUpdate();
-		} 
-		catch (SQLException e) {handleSQLException(e);return -1;}
-	}
-	
-	public int queryUpdate(PreparedStatement ps, String str) 
-	{
-		return queryUpdate(ps, Arrays.asList(str));
-	}
-
-	
 
 	private static boolean isDateValid(String date, String format) 
 	{
@@ -454,27 +419,5 @@ public class team14 {
 	{
 		return isDateValid(date, "dd-MM-yyyy/hh:mm:ssa");
 	}
-	
-
-	public void updateDate() 
-	{
-		String date;
-		boolean exit = false ;
-		do 
-		{
-			date = getInput("Please enter a date or 'exit' to exit (must match dd-mm-yyyy/hh:mi:ssam)").toUpperCase();
-			if(date.equals("EXIT")) 
-			{
-				exit = true ;
-				break ;
-			}
-		} while(!isDateValid(date));
-		
-		if(!exit) {
-			queryUpdate(getPreparedQuery("update sys_time set my_time = to_date(?, 'dd-mm-yyyy/hh:mi:ssam')"), date);
-			System.out.println("\nDate successfully changed!\n") ;
-		}
-	}
-
 
 }
