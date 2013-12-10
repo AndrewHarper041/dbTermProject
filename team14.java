@@ -169,47 +169,83 @@ public class team14 {
 	
 	public void addCustomer()
 	{
+		try 
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fn));
+			String line;
+			String[] split;
+			while((line = br.readLine()) != null)
+			{
+				split = line.split("\\s+");
+				CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
+				
+				String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
+				String first = getInput("First Name?");
+				String last = getInput("Last Name?");
+				
+				//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
+				
+				String street = getInput("Street Name?");
+				String city = getInput("City Name?");
+				String state = getInput("State Name?");
+				String email = getInput("Email Address?");
+				
+				
+				cs.setString(1, sal);
+				cs.setString(2, first);
+				cs.setString(3, last);
+				cs.setString(4, cardNum);
+				cs.setString(5, cardExp);
+				cs.setString(6, street);
+				cs.setString(7, city);
+				cs.setString(8, state);
+				cs.setString(9, email);
+					
+				
 	
-	}
+				cs.execute();
+			}
+		}catch(Exception e) {System.out.println(e);}
+	}	
 		
 	public void showCustomer()
 	{
-	
+		
 	}
 		
 	public void findPrice()
 	{
-	
+		
 	}
 		
 	public void findRoutes()
 	{
-	
+		
 	}
 		
 	public void findAvailableRoutes()
 	{
-	
+		
 	}
 		
 	public void addReservation()
 	{
-	
+		
 	}
 		
 	public void showReservation()
 	{
-	
+		
 	}
 		
 	public void buyTicket()
 	{
-	
+		
 	}
 		
 	public void eraseDatabase()
 	{
-	
+		
 	}
 		
 	public void loadScheduleInfo(String fn)
@@ -280,7 +316,7 @@ public class team14 {
 		
 	public void generateManifest()
 	{
-	
+		
 	}	
 	
 	public int getNumericInput(String prompt) 
