@@ -171,40 +171,41 @@ public class team14 {
 	{
 		try 
 		{
-			BufferedReader br = new BufferedReader(new FileReader(fn));
-			String line;
-			String[] split;
-			while((line = br.readLine()) != null)
+
+			CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
+			
+			String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
+			String first = getInput("First Name?");
+			String last = getInput("Last Name?");
+			
+			//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
+			
+			String street = getInput("Street Name?");
+			String city = getInput("City Name?");
+			String state = getInput("State Name?");
+			String email = getInput("Email Address?");
+			String cardNum = getInput("Credit Card Number?");
+			String cardExp = getInput("Credit Card Expiration Date (yyyy-MM-dd)?");
+			
+			if(!isDateValid(cardExp))
+				System.out.println("Card exp date is invalid format. Needs to be yyyy-MM-dd. Add Aborted");
+			
+			else
 			{
-				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
-				
-				String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
-				String first = getInput("First Name?");
-				String last = getInput("Last Name?");
-				
-				//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
-				
-				String street = getInput("Street Name?");
-				String city = getInput("City Name?");
-				String state = getInput("State Name?");
-				String email = getInput("Email Address?");
-				
-				
 				cs.setString(1, sal);
 				cs.setString(2, first);
 				cs.setString(3, last);
 				cs.setString(4, cardNum);
-				cs.setString(5, cardExp);
+				
+				cs.setDate(5, java.sql.Date.valueOf(cardExp));
 				cs.setString(6, street);
 				cs.setString(7, city);
 				cs.setString(8, state);
 				cs.setString(9, email);
-					
 				
-	
 				cs.execute();
-			}
+			}	
+			
 		}catch(Exception e) {System.out.println(e);}
 	}	
 		
@@ -258,6 +259,7 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
+				
 				CallableStatement cs = connection.prepareCall("begin insertSchedule(?, ?, ?, ?, ?, ?, ?); end;");
 				
 				for(int i = 0; i < 7; i++)
@@ -283,8 +285,8 @@ public class team14 {
 				
 				cs.setString(1, split[0]);
 				cs.setString(2, split[1]);
-				cs.setInt(3, split[2]);
-				cs.setInt(4, split[3]);
+				cs.setInt(3, Integer.parseInt(split[2]));
+				cs.setInt(4, Integer.parseInt(split[3]));
 	
 				cs.execute();
 			}
@@ -301,13 +303,14 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("begin put_product(?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("begin insertPlane(?, ?, ?, ?, ?); end;");
 				
 				
 				cs.setString(1, split[0]);
 				cs.setString(2, split[1]);
-				cs.setInt(3, split[2]);
-				cs.setInt(4, split[3]);
+				cs.setInt(3, Integer.parseInt(split[2]));
+				cs.setDate(4, java.sql.Date.valueOf(split[3]));
+				cs.setInt(4, Integer.parseInt(split[3]));
 	
 				cs.execute();
 			}

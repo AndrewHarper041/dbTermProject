@@ -308,6 +308,18 @@ INSERT INTO Price values(ndeparture_city, narrival_city, nhigh_price, nlow_price
 END;
 /
 
+CREATE OR REPLACE PROCEDURE insertPlane(
+nplane_type in char,
+nmanufacture in varchar2,
+nplane_capacity in int,
+nlast_service in date,
+nyear in int
+is
+BEGIN
+INSERT INTO Plane values(nplane_type, nplane_type, nplane_capacity, nlast_service, nyear);
+END;
+/
+
 
 
 
