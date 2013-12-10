@@ -294,7 +294,13 @@ public class team14 {
 			String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
 			String db = connection.getMetaData().getURL();
 			if(ans.equals("Yes"))
-				query("DROP DATABASE " + db + ";");
+				query("DELETE * FROM Flight; " + 
+						"DELETE * FROM Plane; "+
+						"DELETE * FROM Price; "+
+						"DELETE * FROM Customer; "+
+						"DELETE * FROM Resrvation; "+
+						"DELETE * FROM Reservation_Detail; " +
+						"DELETE * FROM c_date ; ");
 
 		//String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
 		//if(confirmation == 'Y'){
