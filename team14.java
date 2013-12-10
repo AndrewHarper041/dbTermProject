@@ -203,7 +203,7 @@ public class team14 {
 			String email = getInput("Email Address?");
 			String cardNum = getInput("Credit Card Number?");
 			String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
-			
+			String phoneNum = getInput("Phone number (xxxxxxxxxx)?"
 			java.sql.Date date = strToDate("cardExp");
 			
 			if(date != null);
@@ -217,7 +217,8 @@ public class team14 {
 				cs.setString(6, street);
 				cs.setString(7, city);
 				cs.setString(8, state);
-				cs.setString(9, email);
+				cs.setString(9, phoneNum);
+				cs.setString(10, email);
 				
 				cs.execute();
 			}	
@@ -229,7 +230,7 @@ public class team14 {
 	{
 		String fn = getInput("First Name?");
 		String ln = getInput("Last Name?");
-		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = \'" + ln + "';");
+		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = '" + ln + "';");
 		/* Query
 		
 		SELECT * FROM Customer WHERE nfirst_name = first_name and nlast_name = last_name
