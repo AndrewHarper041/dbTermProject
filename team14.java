@@ -214,12 +214,25 @@ public class team14 {
 		String fn = getInput("First Name?");
 		String ln = getInput("Last Name?");
 		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = \'" + ln + "';");
+		/* Query
+		
+		SELECT * FROM Customer WHERE nfirst_name = first_name and nlast_name = last_name
+		
+		*/ 
 	}
 		
 	public void findPrice()
 	{
 		String a = getInput("From city?");
 		String b = getInput("To city?");
+		/* Query
+		
+			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
+			
+			SELECT high_price, low_price FROM PRICE WHERE narrival_city = departure_city and ndeparture_city = arrival_city
+		
+			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
+		*/
 	}
 		
 	public void findRoutes()
@@ -242,7 +255,12 @@ public class team14 {
 		
 	public void showReservation()
 	{
-		
+		/*
+			SELECT *
+			FROM Flight f JOIN (SELECT Flight_number 
+								FROM   Reservation_detail 
+								WHERE nreservation_number = reservation_number) t ON f.Flight_number = t.Flight_number ;
+		*/
 	}
 		
 	public void buyTicket()
@@ -256,6 +274,23 @@ public class team14 {
 		String db = connection.getMetaData().getURL();
 		if(ans.equals("Yes"))
 			query("DROP DATABASE " + db);
+
+		//String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
+		//if(confirmation == 'Y'){
+			/*Queries
+			DELETE * FROM Flight;
+			DELETE * FROM Plane;
+			DELETE * FROM Price;
+			DELETE * FROM Customer;
+			DELETE * FROM Resrvation;
+			DELETE * FROM Reservation_Detail;
+			DELETE * FROM c_date ;
+			
+			
+			
+			*/
+		
+		}
 		
 	}	
 		
@@ -331,6 +366,21 @@ public class team14 {
 		String flightNum = getInput("What flight number?");
 		String flightNum = getInput("What date?");
 		//Join with customer on cid and print where date and fn match
+		
+		/*
+			The Query:
+			
+			SELECT Salutation, first_name, last_name
+				  FROM Customer c JOIN (SELECT cid
+										FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number
+										WHERE rd.flight_date =ndate and rd.flight_number = nflight_number) t ON c.cid = t.cid;
+			
+				 
+								     
+						 
+		
+		*/
+		
 		
 	}	
 	
