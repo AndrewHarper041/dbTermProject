@@ -186,51 +186,54 @@ public class team14 {
 	
 	public void addCustomer()
 	{
-		try 
-		{
-
-			CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
-			
-			String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
-			String first = getInput("First Name?");
-			String last = getInput("Last Name?");
-			
-			//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
-			
-			String street = getInput("Street Name?");
-			String city = getInput("City Name?");
-			String state = getInput("State Name?");
-			String email = getInput("Email Address?");
-			String cardNum = getInput("Credit Card Number?");
-			String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
-			String phoneNum = getInput("Phone number (xxxxxxxxxx)?"
-			java.sql.Date date = strToDate("cardExp");
-			
-			if(date != null);
+		public void addCustomer()
+        {
+			try 
 			{
-				cs.setString(1, sal);
-				cs.setString(2, first);
-				cs.setString(3, last);
-				cs.setString(4, cardNum);
-				
-				cs.setDate(5, date);
-				cs.setString(6, street);
-				cs.setString(7, city);
-				cs.setString(8, state);
-				cs.setString(9, phoneNum);
-				cs.setString(10, email);
-				
-				cs.execute();
-			}	
-			
-		}catch(Exception e) {System.out.println(e);}
+
+					CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
+					
+					String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
+					String first = getInput("First Name?");
+					String last = getInput("Last Name?");
+					
+					//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
+					
+					String street = getInput("Street Name?");
+					String city = getInput("City Name?");
+					String state = getInput("State Name?");
+					String email = getInput("Email Address?");
+					String cardNum = getInput("Credit Card Number?");
+					String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
+					String phoneNum = getInput("Phone number (xxxxxxxxxx)?"
+					java.sql.Date date = strToDate("cardExp");
+					
+					if(date != null);
+					{
+							cs.setString(1, sal);
+							cs.setString(2, first);
+							cs.setString(3, last);
+							cs.setString(4, cardNum);
+							
+							cs.setDate(5, java.sql.Date.valueOf(cardExp));
+							cs.setString(6, street);
+							cs.setString(7, city);
+							cs.setString(8, state);
+							cs.setString(9, phoneNum);
+							cs.setString(10, email);
+							
+							cs.execute();
+					}        
+					
+			}catch(Exception e) {System.out.println(e);}
+        }     
 	}	
 		
 	public void showCustomer()
 	{
 		String fn = getInput("First Name?");
 		String ln = getInput("Last Name?");
-		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = '" + ln + "';");
+		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = \'" + ln + "';");
 		/* Query
 		
 		SELECT * FROM Customer WHERE nfirst_name = first_name and nlast_name = last_name
