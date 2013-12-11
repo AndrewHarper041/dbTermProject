@@ -55,7 +55,7 @@ cost int,
 reservation_date date,
 ticketed varchar2(1)
 );
-
+	
 create table Reservation_detail(
 reservation_number varchar2(5),
 flight_number varchar2(3),
@@ -85,6 +85,7 @@ INSERT INTO PRICE values('DCA', 'PIT', '200', '150');
 insert into customer values('123456789', 'MR', 'Josh', 'Frey', '4444444444444444', to_date('08/31/1991','mm/dd/yyyy'), 'ward', 'pittsburgh', 'PA', '7174494601', 'jtf15@pitt.edu');
 
 
+insert into reservation values('12345', '123456789', '150', to_date('09/09/2009','mm/dd/yyyy'), 1);
 insert into reservation_detail values('12345', '153', to_date('09/09/2009','mm/dd/yyyy'), 1);
 
 

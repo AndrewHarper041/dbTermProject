@@ -298,8 +298,12 @@ public class team14
 		
 	public void showReservation()
 	{
-		String reserveNum = getInput("Which reservation?");
-		query("SELECT * FROM Flight f JOIN (SELECT Flight_number FROM   Reservation_detail WHERE " + reserveNum + " = reservation_number) t ON f.Flight_number = t.Flight_number");
+		String reserveNum = getInput("Which reservation number?");
+		ResultSet rs = query("SELECT * FROM Flight f JOIN (SELECT Flight_number FROM   Reservation_detail WHERE '" + reserveNum + "' = reservation_number) t ON f.Flight_number = t.Flight_number");
+		if(rs != null)
+			printRS(rs);
+		else
+			System.out.println("No reservations found with that number");
 	}
 		
 	public void buyTicket()
@@ -422,7 +426,7 @@ public class team14
 		//Join with customer on cid and print where date and fn match
 		
 		//THROWS ERROR java.sql.SQLSyntaxErrorException invalid relation operator
-		printRS(query("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd.flight_date = to_date('" + flightDate + "','mm/dd/yyyy') and rd.flight_number = '" + flightNum + "') t ON c.cid = t.cid"));
+		printRS(query("SELECT c.Salutation, c.first_name, c.last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd.flight_date = to_date('" + flightDate + "','mm/dd/yyyy') and rd.flight_number = '" + flightNum + "') t ON c.cid = t.cid"));
 		
 		/*
 			The Query:
@@ -522,7 +526,6 @@ public class team14
 	{
 		try
 		{
-		
 			if(isDateValid(date))
 			{
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");;
@@ -584,7 +587,6 @@ public class team14
         } catch (ParseException e) {return false;}
 	}
 	
-
 	private static boolean isDateValid(String date) 
 	{
 		return isDateValid(date, "MM/dd/yyyy");
