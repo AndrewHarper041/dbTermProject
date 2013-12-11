@@ -21,7 +21,7 @@ Customer:
 4.
 5.
 6.
-7.
+7.Works
 8.
 */
 
@@ -308,7 +308,7 @@ public class team14
 		
 	public void buyTicket()
 	{
-		
+		F
 	}
 		
 	public void eraseDatabase()
