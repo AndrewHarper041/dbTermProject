@@ -30,7 +30,7 @@ public class team14
 	private Connection connection;
 	private Scanner sc;
 	
-	private static final String lineBreak = "\n ----------------------------------- \n";
+	private static final String lineBreak = "\n --------------------------------------------------------------- \n";
 
 	public static void main(String args[]) 
 	{
@@ -66,6 +66,7 @@ public class team14
 				choices.add("User");
 				choices.add("Exit");
 				choice = getChoice("Main menu", choices);
+				System.out.println(choice);
 				break;
 				
 			case 1:
@@ -292,7 +293,23 @@ public class team14
 		
 	public void addReservation()
 	{
-		int leg = getNumericInput("How many legs?");
+		int flightNum;
+		int legs = 0;
+		String date;
+		while((flightNum = getNumericInput("Flight number of leg? 0 if all legs given.")) != 0)
+		{
+			if(legs == 4)
+				break;
+
+			date = getInput("Date of the flight? (MM/dd/yyyy)");
+			legs++;
+			
+			ResultSet rs = query("SELECT Count(DISTINCT cid) FROM Reservation r JOIN Reservation_detail d ON r.reservation_number = d.reservation_number WHERE d.flight_date = '" + strToDate(date) + "' and d.flight_number = '" + flightNum + "'");
+			printRS(rs);
+			
+		}
+		if(legs == 0)
+			System.out.println("No flights selected");
 	}
 		
 	public void showReservation()
@@ -432,7 +449,7 @@ public class team14
 			The Query:
 			
 			SELECT Salutation, first_name, last_name
-				  FROM Customer c JOIN (SELECT cid
+				  FROM Customer c JOIN (SELECT cid 
 										FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number
 										WHERE rd.flight_date =ndate and rd.flight_number = nflight_number) t ON c.cid = t.cid;
 		*/	
@@ -440,17 +457,19 @@ public class team14
 	
 	public int getNumericInput(String prompt) 
 	{
-		try 
-		{
 		while (true) 
 		{
-			String input = getInput(prompt);
-			if (input == null) 
-				return 0;
-			else 
-				return Integer.parseInt(input);
+			try 
+			{
+				String input = getInput(prompt);
+				System.out.println(input);
+				if (input.isEmpty()) 
+					return 0;
+				else 
+					return Integer.parseInt(input);
+			} catch(Exception e){System.out.println(e); continue;}	
 		}
-		} catch(Exception e){System.out.println(e);}	
+		
 	}
 	
 	public String getInput(String prompt) 
@@ -461,7 +480,7 @@ public class team14
 		{
 			System.out.print(prompt + ": ");
 			str = sc.nextLine().trim();                     
-		} while(str != null);
+		} while(str.isEmpty());
 		
 		return str;
 	}
@@ -478,7 +497,7 @@ public class team14
 		
 		int choice;
 		do 
-		{
+		{			
 			choice = getNumericInput("Choose an Item");
 		} while (choice <= 0 || choice > choices.size());
 		return choice;
