@@ -280,6 +280,31 @@ public class team14
 	{
 		String a = getInput("From city?");
 		String b = getInput("To city?");
+		System.out.println("Direct Flights")
+		printRS("SELECT flight_number, departure_city, departure_time, arrival_time FROM Flight WHERE departure_city = '" + a + "' and arrival_city = '" + b + "'");
+		System.out.println("\nAll Connected Flights") ;
+		printRS("SELECT flight_number, departure_city, departure_time, arrival_time FROM (SELECT Flight_number, Arrival_city, Departure_city, departure_time, arrival_time FROM Flight WHERE arrival_city = '" + b + "') t JOIN ( SELECT Flight_number, Arrival_city, Departure_city, departure_time, arrival_time FROM Flight  WHERE depature_city = '" + a + "') d WHERE t.arrival_city = d.depature_city");
+		
+		/* 
+		
+			Query
+			
+			SELECT flight_number, departure_city, departure_time, arrival_time 
+			FROM Flight
+			WHERE departure_city = '" + a + "' and arrival_city = '" + b + "'"
+			
+			Get all direct routes
+			
+			SELECT flight_number, departure_city, departure_time, arrival_time
+			FROM (SELECT Flight_number, Arrival_city, Departure_city, departure_time, arrival_time
+				  FROM Flight 
+				  WHERE arrival_city = '" + b + "'") t
+				  JOIN 
+				  ( SELECT Flight_number, Arrival_city, Departure_city, departure_time, arrival_time
+				  FROM Flight 
+				  WHERE depature_city = '" + a + "'") d WHERE t.arrival_city = d.depature_city 
+		
+		*/
 		
 	}
 		
