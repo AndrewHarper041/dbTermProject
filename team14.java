@@ -9,13 +9,13 @@ import java.util.*;
 
 /*TODO:
 Admin:
-1. SQL java.sql.SQLSyntaxErrorException: ORA-00933: SQL command not properly ended, confimation works
+1.Works
 2.Works but does insert double
 3.Works but does insert double
 4.Works but does insert double
-5.Illegal relational operator.
+5.Can't get it to return
 Customer:
-1.Missing in or out parameters on SQL
+1.Works
 2.Missing expression
 3.
 4.
@@ -92,7 +92,7 @@ public class team14 {
 		
 		System.out.println("\n\n" + choices.get(choice - 1));
 		
-		if(menu == 0) 
+		if(menu == 0)
 		{
 			switch(choice) 
 			{
@@ -183,57 +183,56 @@ public class team14 {
 			}
 		} 
 	}
-	
+
 	public void addCustomer()
 	{
-		public void addCustomer()
-        {
-			try 
-			{
+		try 
+		{
 
-					CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("begin add_Customer(?, ?, ?, ?, ?, ?, ?, ?, ?, ?); end;");
+				
+				String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
+				String first = getInput("First Name?");
+				String last = getInput("Last Name?");
+				
+				//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
+				
+				String street = getInput("Street Name?");
+				String city = getInput("City Name?");
+				String state = getInput("State Name?");
+				String email = getInput("Email Address?");
+				String cardNum = getInput("Credit Card Number?");
+				String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
+				String phoneNum = getInput("Phone number (xxxxxxxxxx)?");
+				java.sql.Date date = strToDate(cardExp);
+				
+				if(date != null);
+				{
+					cs.setString(1, sal);
+					cs.setString(2, first);
+					cs.setString(3, last);
+					cs.setString(4, cardNum);
 					
-					String sal = getInput("What do you go by (Mr. , Mrs. etc)?");
-					String first = getInput("First Name?");
-					String last = getInput("Last Name?");
+					cs.setDate(5, date);
+					cs.setString(6, street);
+					cs.setString(7, city);
+					cs.setString(8, state);
+					cs.setString(9, phoneNum);
+					cs.setString(10, email);
 					
-					//NEED TO TEST TO SEE IF USER ALREADY EXSISTS
-					
-					String street = getInput("Street Name?");
-					String city = getInput("City Name?");
-					String state = getInput("State Name?");
-					String email = getInput("Email Address?");
-					String cardNum = getInput("Credit Card Number?");
-					String cardExp = getInput("Credit Card Expiration Date (MM/dd/yyyy)?");
-					String phoneNum = getInput("Phone number (xxxxxxxxxx)?"
-					java.sql.Date date = strToDate("cardExp");
-					
-					if(date != null);
-					{
-							cs.setString(1, sal);
-							cs.setString(2, first);
-							cs.setString(3, last);
-							cs.setString(4, cardNum);
-							
-							cs.setDate(5, java.sql.Date.valueOf(cardExp));
-							cs.setString(6, street);
-							cs.setString(7, city);
-							cs.setString(8, state);
-							cs.setString(9, phoneNum);
-							cs.setString(10, email);
-							
-							cs.execute();
-					}        
-					
-			}catch(Exception e) {System.out.println(e);}
-        }     
-	}	
+					cs.execute();
+				}        
+				
+		}catch(Exception e) {System.out.println(e);}
+	}     
+	
 		
 	public void showCustomer()
 	{
 		String fn = getInput("First Name?");
 		String ln = getInput("Last Name?");
-		query("SELECT * FROM Customer WHERE first_name = '" + fn + "' AND WHERE last_name = \'" + ln + "';");
+		ResultSet rs = query("SELECT * FROM Customer WHERE '" + fn + "' = first_name AND '" + ln + "' = last_name");
+		printRS(rs);
 		/* Query
 		
 		SELECT * FROM Customer WHERE nfirst_name = first_name and nlast_name = last_name
@@ -249,6 +248,7 @@ public class team14 {
 		ResultSet rs1 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
 		ResultSet rs2 = query("SELECT high_price, low_price FROM PRICE WHERE " + b + " = departure_city and " + a + " = arrival_city");
 		//ResultSet rs3 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
+		
 		/* Query
 		
 			SELECT high_price, low_price FROM PRICE WHERE ndeparture_city = departure_city and narrival_city = arrival_city
@@ -283,7 +283,6 @@ public class team14 {
 	{
 		String reserveNum = getInput("Which reservation?");
 		query("SELECT * FROM Flight f JOIN (SELECT Flight_number FROM   Reservation_detail WHERE " + reserveNum + " = reservation_number) t ON f.Flight_number = t.Flight_number");
-
 	}
 		
 	public void buyTicket()
@@ -293,12 +292,18 @@ public class team14 {
 		
 	public void eraseDatabase()
 	{
-		try
+
+		String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\" to confirm.");
+		if(ans.equals("Yes"))
 		{
-			String ans = getInput("Are you sure you want to erase the database? Enter \"Yes\"to confirm.");
-			String db = connection.getMetaData().getURL();
-			if(ans.equals("Yes"))
-				query("DROP DATABASE " + db + ";");
+			query("DELETE Flight");
+			query("DELETE Plane");
+			query("DELETE Price");
+			query("DELETE Customer");
+			query("DELETE Reservation");
+			query("DELETE Reservation_Detail");
+			query("DELETE Current_d");
+		}
 
 		//String confirmation = getInput("Are you sure you want to delete the database? (Y/N)");
 		//if(confirmation == 'Y'){
@@ -317,7 +322,6 @@ public class team14 {
 		
 		//}
 		
-		} catch (SQLException e) {handleSQLException(e);}
 		
 	}	
 		
@@ -332,7 +336,7 @@ public class team14 {
 			{
 				split = line.split("\\s+");
 				
-				CallableStatement cs = connection.prepareCall("call insertSchedule(?, ?, ?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertSchedule(?, ?, ?, ?, ?, ?, ?)");
 				
 				for(int i = 0; i < 7; i++)
 					cs.setString(i+1, split[i]);
@@ -353,7 +357,7 @@ public class team14 {
 			{
 				split = line.split("\\s+");
 				
-				CallableStatement cs = connection.prepareCall("call insertPricing(?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertPricing(?, ?, ?, ?)");
 				
 				
 				cs.setString(1, split[0]);
@@ -379,7 +383,7 @@ public class team14 {
 			while((line = br.readLine()) != null)
 			{
 				split = line.split("\\s+");
-				CallableStatement cs = connection.prepareCall("call insertPlane(?, ?, ?, ?, ?); end;");
+				CallableStatement cs = connection.prepareCall("call insertPlane(?, ?, ?, ?, ?)");
 
 				d = strToDate(split[3]);
 				
@@ -397,12 +401,11 @@ public class team14 {
 	public void generateManifest()
 	{
 		String flightNum = getInput("What flight number?");
-		String flightDate = getInput("What date?");
+		String flightDate = getInput("What date? (MM/dd/yyy)");
 		//Join with customer on cid and print where date and fn match
 		
 		//THROWS ERROR java.sql.SQLSyntaxErrorException invalid relation operator
-		System.out.println("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd." + flightDate + " = ndate and rd." + flightNum + " = nflight_number) t ON c.cid = t.cid;");
-		query("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd." + flightDate + " = ndate and rd." + flightNum + " = nflight_number) t ON c.cid = t.cid;");
+		printRS(query("SELECT Salutation, first_name, last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd.flight_date = to_date('" + flightDate + "','mm/dd/yyyy') and rd.flight_number = '" + flightNum + "') t ON c.cid = t.cid"));
 		
 		/*
 			The Query:
@@ -503,11 +506,10 @@ public class team14 {
 		try
 		{
 		
-			if(isDateValid(date, "MM/dd/yyyy"))
+			if(isDateValid(date))
 			{
-				SimpleDateFormat format;
+				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");;
 				java.util.Date parsed;	
-				format = new SimpleDateFormat("MM/dd/yyyy");
 				parsed = format.parse(date);
 				
 				return new java.sql.Date(parsed.getTime());
@@ -520,6 +522,38 @@ public class team14 {
 			}
 		}catch(ParseException e){System.out.println(e); return null;}
 				
+	}
+	
+	public void printRS(ResultSet rs)
+	{
+		try
+		{
+			try
+			{
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int columnsNumber = rsmd.getColumnCount();
+				while(rs.next()) 
+				{
+					for(int i = 1; i <= columnsNumber; i++)
+						System.out.print(rsmd.getColumnName(i) + "  ");
+					
+					
+					System.out.print(lineBreak);
+					
+					for(int i = 1; i <= columnsNumber; i++) 
+					{
+						if(i > 1)
+							System.out.print(",  ");
+						
+						String columnValue = rs.getString(i);
+						System.out.print(columnValue + " ");
+					}
+					
+					System.out.println("");
+				}
+			}catch(NullPointerException e){System.out.println("No Passengers on that flight");}
+		}
+		catch(Exception e){System.out.println(e);}
 	}
 
 	private static boolean isDateValid(String date, String format) 
@@ -536,7 +570,7 @@ public class team14 {
 
 	private static boolean isDateValid(String date) 
 	{
-		return isDateValid(date, "dd-MM-yyyy/hh:mm:ssa");
+		return isDateValid(date, "MM/dd/yyyy");
 	}
 
 }
