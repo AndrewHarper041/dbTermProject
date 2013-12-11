@@ -157,7 +157,7 @@ WHERE (SELECT flight_number
 		FROM flight
 		WHERE to_date(departure_time, 'HH24:MI') - to_date(:new.c_date, 'HH24:MI') <= 12) = r_d.flight_number) ;
 
-	--Get the current plane's capacity	
+--Get the current plane's capacity	
 SELECT plane_capacity into cplane_capacity
 FROM Plane
 WHERE plane_type = (SELECT plane_type

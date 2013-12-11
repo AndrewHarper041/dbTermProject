@@ -13,7 +13,7 @@ Admin:
 2.Works but does insert double
 3.Works but does insert double
 4.Works but does insert double
-5.Can't get it to return
+5.Works
 Customer:
 1.Works
 2.Works
@@ -22,14 +22,13 @@ Customer:
 5.
 6.
 7.Works
-8.
+8.Works
 */
 
 public class team14 
 {
 	private Connection connection;
-	private String username, password;
-	private Scanner input;
+	private Scanner sc;
 	
 	private static final String lineBreak = "\n ----------------------------------- \n";
 
@@ -48,7 +47,7 @@ public class team14
 		{
 			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 			connection = DriverManager.getConnection("jdbc:oracle:thin:@db10.cs.pitt.edu:1521:dbclass", username, password);
-			input = new Scanner(System.in);
+			sc = new Scanner(System.in);
 			
 			System.out.println("");
 			promptMenu(0);
@@ -293,7 +292,7 @@ public class team14
 		
 	public void addReservation()
 	{
-		
+		int leg = getNumericInput("How many legs?");
 	}
 		
 	public void showReservation()
@@ -308,7 +307,11 @@ public class team14
 		
 	public void buyTicket()
 	{
-		F
+		String num = getInput("Buy which reservation?");
+		query("UPDATE Reservation SET ticketed = 'Y' WHERE reservation_number = '" + num + "'");
+		/*
+		(UPDATE Reservation SET ticketed = 'Y' WHERE reservation_number = '" + num + "')
+		*/
 	}
 		
 	public void eraseDatabase()
@@ -423,9 +426,6 @@ public class team14
 	{
 		String flightNum = getInput("What flight number?");
 		String flightDate = getInput("What date? (MM/dd/yyy)");
-		//Join with customer on cid and print where date and fn match
-		
-		//THROWS ERROR java.sql.SQLSyntaxErrorException invalid relation operator
 		printRS(query("SELECT c.Salutation, c.first_name, c.last_name FROM Customer c JOIN (SELECT cid FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number WHERE rd.flight_date = to_date('" + flightDate + "','mm/dd/yyyy') and rd.flight_number = '" + flightNum + "') t ON c.cid = t.cid"));
 		
 		/*
@@ -435,27 +435,22 @@ public class team14
 				  FROM Customer c JOIN (SELECT cid
 										FROM Reservation r JOIN Reservation_detail rd ON r.Reservation_Number = rd.Reservation_number
 										WHERE rd.flight_date =ndate and rd.flight_number = nflight_number) t ON c.cid = t.cid;
-		*/
-		
-		
+		*/	
 	}	
-	
 	
 	public int getNumericInput(String prompt) 
 	{
+		try 
+		{
 		while (true) 
 		{
-			try 
-			{
-				String input = getInput(prompt);
-				if (input.isEmpty()) 
-					return 0;
-				
-				else 
-					return Integer.parseInt(input);
-				
-			} catch (NumberFormatException e) {continue;}	
+			String input = getInput(prompt);
+			if (input == null) 
+				return 0;
+			else 
+				return Integer.parseInt(input);
 		}
+		} catch(Exception e){System.out.println(e);}	
 	}
 	
 	public String getInput(String prompt) 
@@ -465,8 +460,9 @@ public class team14
 		do 
 		{
 			System.out.print(prompt + ": ");
-			str = input.nextLine().trim();                     
-		} while(str.isEmpty());
+			str = sc.nextLine().trim();                     
+		} while(str != null);
+		
 		return str;
 	}
 
@@ -496,7 +492,8 @@ public class team14
 	}
 	
 
-	public ResultSet query(String query) {
+	public ResultSet query(String query) 
+	{
 		try 
 		{
 			Statement s = connection.createStatement();
@@ -541,7 +538,6 @@ public class team14
 				return null;
 			}
 		}catch(ParseException e){System.out.println(e); return null;}
-				
 	}
 	
 	public void printRS(ResultSet rs)
@@ -576,20 +572,13 @@ public class team14
 		catch(Exception e){System.out.println(e);}
 	}
 
-	private static boolean isDateValid(String date, String format) 
+	private static boolean isDateValid(String date) 
 	{
         try 
 		{
-            DateFormat df = new SimpleDateFormat(format);
-            df.setLenient(false);
-            df.parse(date);
+            DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            format.parse(date);
             return true;
-        } catch (ParseException e) {return false;}
+        } catch (ParseException e){return false;}
 	}
-	
-	private static boolean isDateValid(String date) 
-	{
-		return isDateValid(date, "MM/dd/yyyy");
-	}
-
 }
