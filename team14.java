@@ -16,8 +16,8 @@ Admin:
 5.Can't get it to return
 Customer:
 1.Works
-2.Missing expression
-3.
+2.Works
+3.Works
 4.
 5.
 6.
@@ -25,7 +25,8 @@ Customer:
 8.
 */
 
-public class team14 {
+public class team14 
+{
 	private Connection connection;
 	private String username, password;
 	private Scanner input;
@@ -115,30 +116,37 @@ public class team14 {
 					addCustomer();
 					promptMenu(1);
 					break;
+					
 				case 2:
 					showCustomer();
 					promptMenu(1);
 					break;
+					
 				case 3:
 					findPrice();
 					promptMenu(1);
 					break;
+					
 				case 4:
 					findRoutes();
 					promptMenu(1);
 					break;
+					
 				case 5:
 					findAvailableRoutes();
 					promptMenu(1);
 					break;
+					
 				case 6:
 					addReservation();
 					promptMenu(1);
 					break;
+					
 				case 7:
 					showReservation();
 					promptMenu(1);
 					break;
+					
 				case 8:
 					buyTicket();
 					promptMenu(1);
@@ -245,8 +253,17 @@ public class team14 {
 		String a = getInput("From city?");
 		String b = getInput("To city?");
 		
-		ResultSet rs1 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
-		ResultSet rs2 = query("SELECT high_price, low_price FROM PRICE WHERE " + b + " = departure_city and " + a + " = arrival_city");
+		ResultSet rs1 = query("SELECT high_price, low_price FROM PRICE WHERE '" + a + "' = departure_city and '" + b + "' = arrival_city");
+		ResultSet rs2 = query("SELECT high_price, low_price FROM PRICE WHERE '" + b + "' = departure_city and '" + a + "' = arrival_city");
+		
+		if(rs1 != null)
+			printRS(rs1);
+			
+		else if(rs2 != null)
+			printRS(rs2);
+		
+		else
+			System.out.println("No Flights Found");
 		//ResultSet rs3 = query("SELECT high_price, low_price FROM PRICE WHERE " + a + " = departure_city and " + b + " = arrival_city");
 		
 		/* Query
